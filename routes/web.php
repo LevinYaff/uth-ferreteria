@@ -34,6 +34,8 @@ Route::middleware('auth')->group(function () {
 
         // Ventas
         Route::resource('ventas', VentaController::class);
+        Route::post('ventas/{venta}/cancelar', [VentaController::class, 'cancelar'])->name('ventas.cancelar');
+
     });
 
     // Rutas solo para admin
