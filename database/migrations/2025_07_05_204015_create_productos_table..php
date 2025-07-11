@@ -12,13 +12,16 @@ return new class extends Migration
             $table->id();
             $table->string('nombre');
             $table->text('descripcion')->nullable();
-            $table->foreignId('categoria_id')->constrained()->onDelete('cascade');
-            $table->decimal('precio_compra', 10, 2);
-            $table->decimal('precio_venta', 10, 2);
-            $table->integer('stock');
-            $table->string('codigo')->nullable();
+            $table->unsignedBigInteger('categoria_id');
+            $table->decimal('precio_compra', 8, 2);
+            $table->decimal('precio_venta', 8, 2);
+            $table->integer('stock')->default(0);
+            $table->string('codigo')->unique();
+            $table->string('imagen')->nullable()->after('codigo');
             $table->boolean('activo')->default(true);
             $table->timestamps();
+
+            $table->foreign('categoria_id')->references('id')->on('categorias')->onDelete('cascade');
         });
     }
 

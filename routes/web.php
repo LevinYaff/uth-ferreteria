@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ProveedorController;
 use App\Http\Controllers\VentaController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 // Rutas públicas
@@ -35,7 +36,6 @@ Route::middleware('auth')->group(function () {
         // Ventas
         Route::resource('ventas', VentaController::class);
         Route::post('ventas/{venta}/cancelar', [VentaController::class, 'cancelar'])->name('ventas.cancelar');
-
     });
 
     // Rutas solo para admin
@@ -44,8 +44,13 @@ Route::middleware('auth')->group(function () {
         Route::resource('categorias', CategoriaController::class);
 
         // Proveedores
-        Route::resource('proveedores', ProveedorController::class);
+        Route::resource('proveedores', ProveedorController::class)->parameters([
+            'proveedores' => 'proveedor'
+        ]);
+
+        // Gestión de usuarios
+        Route::resource('users', UserController::class);
     });
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

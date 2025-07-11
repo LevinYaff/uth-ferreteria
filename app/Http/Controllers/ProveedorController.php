@@ -6,29 +6,21 @@ use App\Models\Proveedor;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Log;
 
 class ProveedorController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(): View
     {
         $proveedores = Proveedor::all();
         return view('proveedores.index', compact('proveedores'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(): View
     {
         return view('proveedores.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
@@ -46,17 +38,11 @@ class ProveedorController extends Controller
             ->with('success', 'Proveedor creado exitosamente.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Proveedor $proveedor): View
     {
         return view('proveedores.edit', compact('proveedor'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Proveedor $proveedor): RedirectResponse
     {
         $request->validate([
@@ -74,14 +60,23 @@ class ProveedorController extends Controller
             ->with('success', 'Proveedor actualizado exitosamente.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Proveedor $proveedor): RedirectResponse
     {
-        $proveedor->delete();
+        try {
+            // Registra información para depuración
+            Log::info('Intentando eliminar proveedor', ['id' => $proveedor->id, 'nombre' => $proveedor->nombre]);
 
-        return redirect()->route('proveedores.index')
-            ->with('success', 'Proveedor eliminado exitosamente.');
+            $proveedor->delete();
+
+            Log::info('Proveedor eliminado correctamente');
+
+            return redirect()->route('proveedores.index')
+                ->with('success', 'Proveedor eliminado exitosamente.');
+        } catch (\Exception $e) {
+            Log::error('Error al eliminar proveedor', ['error' => $e->getMessage()]);
+
+            return redirect()->route('proveedores.index')
+                ->with('error', 'Error al eliminar el proveedor: ' . $e->getMessage());
+        }
     }
 }

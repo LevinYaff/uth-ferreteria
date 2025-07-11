@@ -53,10 +53,10 @@
                                         <td class="py-4 px-6 flex">
                                             <a href="{{ route('proveedores.edit', $proveedor->id) }}" class="text-blue-600 hover:text-blue-900 mr-2">Editar</a>
                                             <form action="{{ route('proveedores.destroy', $proveedor->id) }}" method="POST" class="inline-block">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('¿Está seguro de que desea eliminar este proveedor?')">Eliminar</button>
-                                            </form>
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('¿Está seguro de que desea eliminar este proveedor?')">Eliminar</button>
+</form>
                                         </td>
                                     </tr>
                                 @empty

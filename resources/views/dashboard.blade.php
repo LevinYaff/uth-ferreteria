@@ -44,7 +44,7 @@
                     <div class="p-6 text-gray-900 dark:text-gray-100">
                         <h3 class="text-lg font-medium mb-4">Ventas Recientes</h3>
 
-                        @if($ventasRecientes->count() > 0)
+                        @if ($ventasRecientes->count() > 0)
                             <div class="overflow-x-auto">
                                 <table class="min-w-full bg-white dark:bg-gray-700">
                                     <thead>
@@ -56,10 +56,11 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($ventasRecientes as $venta)
+                                        @foreach ($ventasRecientes as $venta)
                                             <tr class="border-b border-gray-200 dark:border-gray-600">
                                                 <td class="py-2 px-4">
-                                                    <a href="{{ route('ventas.show', $venta->id) }}" class="text-blue-600 hover:text-blue-900">
+                                                    <a href="{{ route('ventas.show', $venta->id) }}"
+                                                        class="text-blue-600 hover:text-blue-900">
                                                         #{{ $venta->id }}
                                                     </a>
                                                 </td>
@@ -72,7 +73,8 @@
                                 </table>
                             </div>
                             <div class="mt-4">
-                                <a href="{{ route('ventas.index') }}" class="text-blue-600 hover:text-blue-900">Ver todas las ventas →</a>
+                                <a href="{{ route('ventas.index') }}" class="text-blue-600 hover:text-blue-900">Ver
+                                    todas las ventas →</a>
                             </div>
                         @else
                             <p class="text-gray-500 dark:text-gray-400">No hay ventas recientes.</p>
@@ -85,7 +87,7 @@
                     <div class="p-6 text-gray-900 dark:text-gray-100">
                         <h3 class="text-lg font-medium mb-4">Productos con Bajo Stock</h3>
 
-                        @if($productosBajoStock->count() > 0)
+                        @if ($productosBajoStock->count() > 0)
                             <div class="overflow-x-auto">
                                 <table class="min-w-full bg-white dark:bg-gray-700">
                                     <thead>
@@ -96,16 +98,18 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($productosBajoStock as $producto)
+                                        @foreach ($productosBajoStock as $producto)
                                             <tr class="border-b border-gray-200 dark:border-gray-600">
                                                 <td class="py-2 px-4">
-                                                    <a href="{{ route('productos.edit', $producto->id) }}" class="text-blue-600 hover:text-blue-900">
+                                                    <a href="{{ route('productos.edit', $producto->id) }}"
+                                                        class="text-blue-600 hover:text-blue-900">
                                                         {{ $producto->nombre }}
                                                     </a>
                                                 </td>
                                                 <td class="py-2 px-4">{{ $producto->categoria->nombre }}</td>
                                                 <td class="py-2 px-4">
-                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                                    <span
+                                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
                                                         {{ $producto->stock }}
                                                     </span>
                                                 </td>
@@ -115,7 +119,8 @@
                                 </table>
                             </div>
                             <div class="mt-4">
-                                <a href="{{ route('productos.index') }}" class="text-blue-600 hover:text-blue-900">Ver todos los productos →</a>
+                                <a href="{{ route('productos.index') }}" class="text-blue-600 hover:text-blue-900">Ver
+                                    todos los productos →</a>
                             </div>
                         @else
                             <p class="text-gray-500 dark:text-gray-400">No hay productos con bajo stock.</p>
@@ -128,7 +133,7 @@
                     <div class="p-6 text-gray-900 dark:text-gray-100">
                         <h3 class="text-lg font-medium mb-4">Productos Más Vendidos</h3>
 
-                        @if($productosMasVendidos->count() > 0)
+                        @if ($productosMasVendidos->count() > 0)
                             <div class="overflow-x-auto">
                                 <table class="min-w-full bg-white dark:bg-gray-700">
                                     <thead>
@@ -139,11 +144,12 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($productosMasVendidos as $producto)
+                                        @foreach ($productosMasVendidos as $producto)
                                             <tr class="border-b border-gray-200 dark:border-gray-600">
                                                 <td class="py-2 px-4">{{ $producto->nombre }}</td>
                                                 <td class="py-2 px-4">{{ $producto->total_vendido }}</td>
-                                                <td class="py-2 px-4">${{ number_format($producto->total_ingresos, 2) }}</td>
+                                                <td class="py-2 px-4">
+                                                    ${{ number_format($producto->total_ingresos, 2) }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -161,26 +167,39 @@
                         <h3 class="text-lg font-medium mb-4">Acciones Rápidas</h3>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <a href="{{ route('ventas.create') }}" class="block p-4 bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800 rounded-lg transition duration-300">
+                            <a href="{{ route('ventas.create') }}"
+                                class="block p-4 bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800 rounded-lg transition duration-300">
                                 <h4 class="text-md font-semibold mb-1">Registrar Venta</h4>
                                 <p class="text-sm text-gray-600 dark:text-gray-400">Procesar una nueva venta</p>
                             </a>
 
-                            <a href="{{ route('productos.create') }}" class="block p-4 bg-green-100 hover:bg-green-200 dark:bg-green-900 dark:hover:bg-green-800 rounded-lg transition duration-300">
+                            <a href="{{ route('productos.create') }}"
+                                class="block p-4 bg-green-100 hover:bg-green-200 dark:bg-green-900 dark:hover:bg-green-800 rounded-lg transition duration-300">
                                 <h4 class="text-md font-semibold mb-1">Nuevo Producto</h4>
                                 <p class="text-sm text-gray-600 dark:text-gray-400">Añadir producto al inventario</p>
                             </a>
 
-                            @if(auth()->user()->role === 'admin')
-                            <a href="{{ route('proveedores.create') }}" class="block p-4 bg-purple-100 hover:bg-purple-200 dark:bg-purple-900 dark:hover:bg-purple-800 rounded-lg transition duration-300">
-                                <h4 class="text-md font-semibold mb-1">Nuevo Proveedor</h4>
-                                <p class="text-sm text-gray-600 dark:text-gray-400">Registrar proveedor</p>
-                            </a>
+                            @if (auth()->user()->role === 'admin')
+                                <a href="{{ route('proveedores.create') }}"
+                                    class="block p-4 bg-purple-100 hover:bg-purple-200 dark:bg-purple-900 dark:hover:bg-purple-800 rounded-lg transition duration-300">
+                                    <h4 class="text-md font-semibold mb-1">Nuevo Proveedor</h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">Registrar proveedor</p>
+                                </a>
 
-                            <a href="{{ route('categorias.create') }}" class="block p-4 bg-yellow-100 hover:bg-yellow-200 dark:bg-yellow-900 dark:hover:bg-yellow-800 rounded-lg transition duration-300">
-                                <h4 class="text-md font-semibold mb-1">Nueva Categoría</h4>
-                                <p class="text-sm text-gray-600 dark:text-gray-400">Añadir categoría de productos</p>
-                            </a>
+                                <a href="{{ route('categorias.create') }}"
+                                    class="block p-4 bg-yellow-100 hover:bg-yellow-200 dark:bg-yellow-900 dark:hover:bg-yellow-800 rounded-lg transition duration-300">
+                                    <h4 class="text-md font-semibold mb-1">Nueva Categoría</h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">Añadir categoría de productos
+                                    </p>
+                                </a>
+                            @endif
+
+                            @if (auth()->user()->role === 'admin')
+                                <a href="{{ route('users.index') }}"
+                                    class="block p-4 bg-indigo-100 hover:bg-indigo-200 dark:bg-indigo-900 dark:hover:bg-indigo-800 rounded-lg transition duration-300">
+                                    <h4 class="text-md font-semibold mb-1">Gestionar Usuarios</h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">Administrar usuarios y roles</p>
+                                </a>
                             @endif
                         </div>
                     </div>
