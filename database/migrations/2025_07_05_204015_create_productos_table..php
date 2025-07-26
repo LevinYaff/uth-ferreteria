@@ -17,11 +17,11 @@ return new class extends Migration
             $table->decimal('precio_venta', 8, 2);
             $table->integer('stock')->default(0);
             $table->string('codigo')->unique();
-            $table->string('imagen')->nullable()->after('codigo');
+            $table->string('imagen')->nullable();
             $table->boolean('activo')->default(true);
             $table->timestamps();
 
-            $table->foreign('categoria_id')->references('id')->on('categorias')->onDelete('cascade');
+            $table->foreign('categoria_id')->references('id')->on('categorias')->onDelete('restrict');
         });
     }
 

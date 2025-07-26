@@ -7,6 +7,13 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            @if (session('theme_updated'))
+                <div class="mb-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 dark:bg-green-800 dark:text-green-200"
+                    role="alert">
+                    <p>{{ session('theme_updated') }}</p>
+                </div>
+            @endif
+
             <!-- Tarjetas de estadísticas -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -46,9 +53,9 @@
 
                         @if ($ventasRecientes->count() > 0)
                             <div class="overflow-x-auto">
-                                <table class="min-w-full bg-white dark:bg-gray-700">
+                                <table class="min-w-full bg-white dark:bg-gray-800 border dark:border-gray-700">
                                     <thead>
-                                        <tr>
+                                        <tr class="bg-gray-100 dark:bg-gray-700">
                                             <th class="py-2 px-4 text-left">#</th>
                                             <th class="py-2 px-4 text-left">Fecha</th>
                                             <th class="py-2 px-4 text-left">Vendedor</th>
@@ -57,7 +64,8 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($ventasRecientes as $venta)
-                                            <tr class="border-b border-gray-200 dark:border-gray-600">
+                                            <tr class="border-t border-gray-200 dark:border-gray-700">
+
                                                 <td class="py-2 px-4">
                                                     <a href="{{ route('ventas.show', $venta->id) }}"
                                                         class="text-blue-600 hover:text-blue-900">
@@ -89,9 +97,9 @@
 
                         @if ($productosBajoStock->count() > 0)
                             <div class="overflow-x-auto">
-                                <table class="min-w-full bg-white dark:bg-gray-700">
+                                <table class="min-w-full bg-white dark:bg-gray-800 border dark:border-gray-700">
                                     <thead>
-                                        <tr>
+                                        <tr class="bg-gray-100 dark:bg-gray-700">
                                             <th class="py-2 px-4 text-left">Producto</th>
                                             <th class="py-2 px-4 text-left">Categoría</th>
                                             <th class="py-2 px-4 text-left">Stock</th>
@@ -99,7 +107,8 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($productosBajoStock as $producto)
-                                            <tr class="border-b border-gray-200 dark:border-gray-600">
+                                            <tr class="border-t border-gray-200 dark:border-gray-700">
+
                                                 <td class="py-2 px-4">
                                                     <a href="{{ route('productos.edit', $producto->id) }}"
                                                         class="text-blue-600 hover:text-blue-900">
@@ -135,9 +144,9 @@
 
                         @if ($productosMasVendidos->count() > 0)
                             <div class="overflow-x-auto">
-                                <table class="min-w-full bg-white dark:bg-gray-700">
+                                <table class="min-w-full bg-white dark:bg-gray-800 border dark:border-gray-700">
                                     <thead>
-                                        <tr>
+                                        <tr class="bg-gray-100 dark:bg-gray-700">
                                             <th class="py-2 px-4 text-left">Producto</th>
                                             <th class="py-2 px-4 text-left">Unidades Vendidas</th>
                                             <th class="py-2 px-4 text-left">Ingresos</th>
@@ -145,7 +154,7 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($productosMasVendidos as $producto)
-                                            <tr class="border-b border-gray-200 dark:border-gray-600">
+                                            <tr class="border-t border-gray-200 dark:border-gray-700">
                                                 <td class="py-2 px-4">{{ $producto->nombre }}</td>
                                                 <td class="py-2 px-4">{{ $producto->total_vendido }}</td>
                                                 <td class="py-2 px-4">
@@ -194,11 +203,12 @@
                                 </a>
                             @endif
 
-                            @if (auth()->user()->role === 'admin')
+                            @if (auth()->user()->role === 'Admin')
                                 <a href="{{ route('users.index') }}"
                                     class="block p-4 bg-indigo-100 hover:bg-indigo-200 dark:bg-indigo-900 dark:hover:bg-indigo-800 rounded-lg transition duration-300">
                                     <h4 class="text-md font-semibold mb-1">Gestionar Usuarios</h4>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400">Administrar usuarios y roles</p>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">Administrar usuarios y roles
+                                    </p>
                                 </a>
                             @endif
                         </div>

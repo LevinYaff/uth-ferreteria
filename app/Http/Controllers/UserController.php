@@ -101,13 +101,10 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-
-
-
     public function destroy(User $user): RedirectResponse
     {
         // Evitar que el usuario se elimine a sí mismo
-        if ($user->id === auth()->id()) {
+        if ($user->id === auth()->user()?->id) {
             return redirect()->route('users.index')
                 ->with('error', 'No puedes eliminar tu propio usuario.');
         }

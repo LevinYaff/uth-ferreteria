@@ -7,16 +7,18 @@ use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ProveedorController;
 use App\Http\Controllers\VentaController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ThemeController;
 use Illuminate\Support\Facades\Route;
 
-// Rutas públicas
+// rutas públicas
 Route::get('/', function () {
     return view('welcome');
+    Route::post('/theme', [ThemeController::class, 'update'])->name('theme.update');
 });
 
-// Rutas autenticadas
+// rutas autenticadas
 Route::middleware('auth')->group(function () {
-    // Dashboard
+    // dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
@@ -28,28 +30,29 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])
         ->name('profile.destroy');
 
-    // Rutas para vendedores y admin
+    // rutas para vendedores y admin
     Route::middleware(['role:admin,vendedor'])->group(function () {
-        // Productos
+        // productos
         Route::resource('productos', ProductoController::class);
 
-        // Ventas
+        // ventas
         Route::resource('ventas', VentaController::class);
         Route::post('ventas/{venta}/cancelar', [VentaController::class, 'cancelar'])->name('ventas.cancelar');
     });
 
-    // Rutas solo para admin
+    // rutas para admin
     Route::middleware(['role:admin'])->group(function () {
-        // Categorías
+        // categorías
         Route::resource('categorias', CategoriaController::class);
 
-        // Proveedores
+        // proveedores
         Route::resource('proveedores', ProveedorController::class)->parameters([
             'proveedores' => 'proveedor'
         ]);
 
-        // Gestión de usuarios
+        // crear nuevos usuarios
         Route::resource('users', UserController::class);
+        Route::post('/theme', [ThemeController::class, 'update'])->name('theme.update');
     });
 });
 

@@ -4,7 +4,8 @@
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 {{ __('Detalles de Venta #') . $venta->id }}
             </h2>
-            <a href="{{ route('ventas.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-500 active:bg-gray-700 focus:outline-none focus:border-gray-700 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
+            <a href="{{ route('ventas.index') }}"
+                class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-500 active:bg-gray-700 focus:outline-none focus:border-gray-700 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
                 Volver a Ventas
             </a>
         </div>
@@ -12,19 +13,19 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            @if(session('success'))
+            @if (session('success'))
                 <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
                     {{ session('success') }}
                 </div>
             @endif
 
-            @if(session('info'))
+            @if (session('info'))
                 <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-4" role="alert">
                     {{ session('info') }}
                 </div>
             @endif
 
-            @if(session('error'))
+            @if (session('error'))
                 <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
                     {{ session('error') }}
                 </div>
@@ -51,16 +52,19 @@
                         <div>
                             <p class="text-sm text-gray-500 dark:text-gray-400">Estado</p>
                             <p class="font-medium">
-                                @if($venta->estado === 'completada')
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                @if ($venta->estado === 'completada')
+                                    <span
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                                         Completada
                                     </span>
                                 @elseif($venta->estado === 'pendiente')
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                    <span
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
                                         Pendiente
                                     </span>
                                 @else
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                    <span
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
                                         Cancelada
                                     </span>
                                 @endif
@@ -68,18 +72,20 @@
                         </div>
                     </div>
 
-                    @if($venta->observaciones)
+                    @if ($venta->observaciones)
                         <div class="mt-4">
                             <p class="text-sm text-gray-500 dark:text-gray-400">Observaciones</p>
                             <p class="font-medium">{{ $venta->observaciones }}</p>
                         </div>
                     @endif
 
-                    @if($venta->estado === 'completada')
+                    @if ($venta->estado === 'completada')
                         <div class="mt-4">
-                            <form action="{{ route('ventas.cancelar', $venta->id) }}" method="POST" onsubmit="return confirm('¿Está seguro de que desea cancelar esta venta? Esta acción restaurará el stock de productos.')">
+                            <form action="{{ route('ventas.cancelar', $venta->id) }}" method="POST"
+                                onsubmit="return confirm('¿Está seguro de que desea cancelar esta venta? Esta acción restaurará el stock de productos.')">
                                 @csrf
-                                <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:border-red-700 focus:ring ring-red-300 disabled:opacity-25 transition ease-in-out duration-150">
+                                <button type="submit"
+                                    class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:border-red-700 focus:ring ring-red-300 disabled:opacity-25 transition ease-in-out duration-150">
                                     Cancelar Venta
                                 </button>
                             </form>
@@ -94,9 +100,9 @@
                     <h3 class="text-lg font-medium mb-4">Productos</h3>
 
                     <div class="overflow-x-auto">
-                        <table class="min-w-full bg-white dark:bg-gray-700">
+                        <table class="min-w-full bg-white dark:bg-gray-800 border dark:border-gray-700">
                             <thead>
-                                <tr>
+                                <tr class="bg-gray-100 dark:bg-gray-700">
                                     <th class="py-3 px-6 text-left">Producto</th>
                                     <th class="py-3 px-6 text-left">Precio Unitario</th>
                                     <th class="py-3 px-6 text-left">Cantidad</th>
@@ -104,8 +110,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($venta->detalles as $detalle)
-                                    <tr class="border-b border-gray-200 dark:border-gray-600">
+                                @foreach ($venta->detalles as $detalle)
+                                    <tr class="border-t border-gray-200 dark:border-gray-700">
                                         <td class="py-4 px-6">{{ $detalle->producto->nombre }}</td>
                                         <td class="py-4 px-6">${{ number_format($detalle->precio_unitario, 2) }}</td>
                                         <td class="py-4 px-6">{{ $detalle->cantidad }}</td>

@@ -46,6 +46,70 @@
                 </div>
             </div>
 
+            <!-- Theme Selector -->
+            <div class="hidden sm:flex sm:items-center sm:ml-6 mr-3">
+                <div class="relative">
+                    <form method="POST" action="{{ route('theme.update') }}" id="theme-form">
+                        @csrf
+                        <input type="hidden" name="theme" :value="theme" id="theme-input">
+
+                        <div class="flex items-center space-x-2">
+                            <!-- Light Mode -->
+                            <button type="button"
+                                @click="
+                                theme = 'light';
+                                  localStorage.setItem('theme', 'light');
+                                    $nextTick(() => document.getElementById('theme-form-mobile').submit());
+                                      "
+                                class="p-2 rounded-full"
+                                :class="theme === 'light' ? 'bg-gray-200 dark:bg-gray-600' : ''">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                                </svg>
+                            </button>
+
+                            <!-- System Mode -->
+                            <button type="button"
+                                @click="
+                                   theme = 'system';
+                                     localStorage.setItem('theme', 'system');
+                                         $nextTick(() => document.getElementById('theme-form-mobile').submit());
+                                           "
+                                class="p-2 rounded-full"
+                                :class="theme === 'system' ? 'bg-gray-200 dark:bg-gray-600' : ''">
+
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                            </button>
+
+                            <!-- Dark Mode -->
+                            <button type="button"
+                                @click="
+                                    theme = 'dark';
+                                     localStorage.setItem('theme', 'dark');
+                                       $nextTick(() => document.getElementById('theme-form-mobile').submit());
+                                        "
+                                class="p-2 rounded-full"
+                                :class="theme === 'dark' ? 'bg-gray-200 dark:bg-gray-600' : ''">
+
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
+
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">
@@ -134,6 +198,65 @@
                     {{ __('Usuarios') }}
                 </x-responsive-nav-link>
             @endif
+        </div>
+
+        <!-- Responsive Theme Selector -->
+        <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
+            <div class="px-4 flex justify-center">
+                <div class="flex space-x-3">
+                    <!-- Light Mode -->
+                    <button type="button"
+                        @click="
+                          theme = 'light';
+                            localStorage.setItem('theme', 'light');
+                             $nextTick(() => document.getElementById('theme-form-mobile').submit());
+                               "
+                        class="p-2 rounded-full" :class="theme === 'light' ? 'bg-gray-200 dark:bg-gray-600' : ''">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                    </button>
+
+                    <!-- System Mode -->
+                    <button type="button"
+                        @click="
+                             theme = 'system';
+                             localStorage.setItem('theme', 'system');
+                             $nextTick(() => document.getElementById('theme-form-mobile').submit());
+                             "
+                        class="p-2 rounded-full" :class="theme === 'system' ? 'bg-gray-200 dark:bg-gray-600' : ''">
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                    </button>
+
+                    <!-- Dark Mode -->
+                    <button type="button"
+                        @click="
+                         theme = 'dark';
+                          localStorage.setItem('theme', 'dark');
+                           $nextTick(() => document.getElementById('theme-form-mobile').submit());
+                             "
+                        class="p-2 rounded-full" :class="theme === 'dark' ? 'bg-gray-200 dark:bg-gray-600' : ''">
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <form method="POST" action="{{ route('theme.update') }}" id="theme-form-mobile" class="hidden">
+                @csrf
+                <input type="hidden" name="theme" :value="theme" id="theme-input-mobile">
+            </form>
         </div>
 
         <!-- Responsive Settings Options -->

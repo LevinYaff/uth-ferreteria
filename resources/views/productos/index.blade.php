@@ -23,9 +23,9 @@
                             </div>
                         @endif
 
-                        <table class="min-w-full bg-white dark:bg-gray-700">
+                        <table class="min-w-full bg-white dark:bg-gray-800 border dark:border-gray-700">
                             <thead>
-                                <tr>
+                                <tr class="bg-gray-100 dark:bg-gray-700">
                                     <th class="py-3 px-6 text-left">Imagen</th>
                                     <th class="py-3 px-6 text-left">Código</th>
                                     <th class="py-3 px-6 text-left">Nombre</th>
@@ -38,7 +38,7 @@
                             </thead>
                             <tbody>
                                 @forelse($productos as $producto)
-                                    <tr class="border-b border-gray-200 dark:border-gray-600">
+                                    <tr class="border-t border-gray-200 dark:border-gray-700">
                                         <td class="py-4 px-6">{{ $producto->codigo ?? 'N/A' }}</td>
                                         <td class="py-4 px-6">
                                             @if ($producto->imagen)
