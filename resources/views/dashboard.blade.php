@@ -5,14 +5,8 @@
         </h2>
     </x-slot>
 
-    <div class="py-12">
+  <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            @if (session('theme_updated'))
-                <div class="mb-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 dark:bg-green-800 dark:text-green-200"
-                    role="alert">
-                    <p>{{ session('theme_updated') }}</p>
-                </div>
-            @endif
 
             <!-- Tarjetas de estadísticas -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">

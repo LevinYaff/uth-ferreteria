@@ -42,6 +42,11 @@
                             {{ __('Usuarios') }}
                         </x-nav-link>
                     @endif
+                    @if (in_array(auth()->user()->role, ['admin']))
+                        <x-nav-link :href="route('compras.index')" :active="request()->routeIs('compras.*')">
+                            {{ __('Compras') }}
+                        </x-nav-link>
+                    @endif
 
                 </div>
             </div>
@@ -197,6 +202,12 @@
                 <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
                     {{ __('Usuarios') }}
                 </x-responsive-nav-link>
+            @endif
+
+            @if (in_array(auth()->user()->role, ['admin']))
+                <x-nav-link :href="route('compras.index')" :active="request()->routeIs('compras.*')">
+                    {{ __('Compras') }}
+                </x-nav-link>
             @endif
         </div>
 

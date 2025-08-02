@@ -11,9 +11,24 @@ export default {
     ],
 
     theme: {
-        extend: {
-            fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+     extend: {
+      colors: {
+        ferresys: {
+          primary: '#D72638',     // Rojo Fierro
+          dark: '#2E2E2E',        // Gris Acero
+          light: '#E0E0E0',       // Gris Cemento
+          yellow: '#FFC107',      // Amarillo Herramienta
+          blue: '#007BFF',        // Azul Técnico
+        },
+        ferre: '#D72638',
+        acero: '#2E2E2E',
+        cemento: '#E0E0E0',
+        herramienta: '#FFC107',
+        tecnico: '#007BFF',
+      },
+      fontFamily: {
+        sans: ['Inter', 'Roboto', 'sans-serif'],
+        heading: ['Montserrat', 'sans-serif'],
             },
         },
     },

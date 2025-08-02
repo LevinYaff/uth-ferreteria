@@ -10,6 +10,7 @@ use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class VentaController extends Controller
 {
@@ -172,5 +173,19 @@ class VentaController extends Controller
             return redirect()->back()
                 ->withErrors(['error' => 'Error al cancelar la venta: ' . $e->getMessage()]);
         }
+    }
+
+    /**
+     * Genera una factura en PDF para la venta especificada.
+     */
+    public function facturaPdf(Venta $venta)
+    {
+        $venta->load(['user', 'detalles.producto']);
+
+        // Configurar PDF para mostrar en navegador en lugar de descargar
+        $pdf = PDF::loadView('ventas.factura_pdf', compact('venta'));
+
+        // Retornar el PDF en el navegador con un nombre específico
+        return $pdf->stream('factura_venta_' . $venta->id . '.pdf');
     }
 }

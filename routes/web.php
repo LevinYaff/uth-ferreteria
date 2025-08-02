@@ -8,11 +8,12 @@ use App\Http\Controllers\ProveedorController;
 use App\Http\Controllers\VentaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ThemeController;
+use App\Http\Controllers\CompraController;
 use Illuminate\Support\Facades\Route;
 
 // rutas públicas
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
     Route::post('/theme', [ThemeController::class, 'update'])->name('theme.update');
 });
 
@@ -38,6 +39,7 @@ Route::middleware('auth')->group(function () {
         // ventas
         Route::resource('ventas', VentaController::class);
         Route::post('ventas/{venta}/cancelar', [VentaController::class, 'cancelar'])->name('ventas.cancelar');
+        Route::get('ventas/{venta}/factura-pdf', [VentaController::class, 'facturaPdf'])->name('ventas.factura-pdf');
     });
 
     // rutas para admin
@@ -53,6 +55,16 @@ Route::middleware('auth')->group(function () {
         // crear nuevos usuarios
         Route::resource('users', UserController::class);
         Route::post('/theme', [ThemeController::class, 'update'])->name('theme.update');
+
+        // Compras
+        Route::resource('compras', CompraController::class);
+        Route::post('compras/{compra}/recibir', [CompraController::class, 'recibir'])->name('compras.recibir');
+        Route::post('compras/{compra}/cancelar', [CompraController::class, 'cancelar'])->name('compras.cancelar');
+        Route::get('compras/{compra}/factura-pdf', [CompraController::class, 'facturaPdf'])->name('compras.factura-pdf');
+        Route::get('proveedores/{proveedor}/compras', [CompraController::class, 'historialProveedor'])->name('proveedores.compras');
+
+        // Productos por proveedor
+        Route::get('proveedores/{proveedor}/productos', [ProveedorController::class, 'productos'])->name('proveedores.productos');
     });
 });
 

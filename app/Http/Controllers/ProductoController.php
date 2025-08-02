@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Producto;
 use App\Models\Categoria;
+use App\Models\Proveedor;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -11,27 +12,19 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(): View
     {
         $productos = Producto::with('categoria')->get();
         return view('productos.index', compact('productos'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(): View
     {
         $categorias = Categoria::all();
-        return view('productos.create', compact('categorias'));
+        $proveedores = Proveedor::where('activo', true)->get(); // <- nuevo
+        return view('productos.create', compact('categorias', 'proveedores')); // <- nuevo
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
@@ -44,33 +37,41 @@ class ProductoController extends Controller
             'codigo' => 'nullable|string|max:50|unique:productos',
             'imagen' => 'nullable|image|max:2048',
             'activo' => 'boolean',
+            'proveedores' => 'array|nullable',
+            'proveedor_principal' => 'nullable|integer'
         ]);
 
-        $data = $request->except('imagen');
+        $data = $request->except('imagen', 'proveedores', 'proveedor_principal');
 
         if ($request->hasFile('imagen')) {
             $imagenPath = $request->file('imagen')->store('productos', 'public');
             $data['imagen'] = $imagenPath;
         }
 
-        Producto::create($data);
+        $producto = Producto::create($data);
+
+        // Asociar proveedores
+        if ($request->has('proveedores')) {
+            $proveedoresData = [];
+            foreach ($request->proveedores as $proveedorId) {
+                $proveedoresData[$proveedorId] = [
+                    'es_proveedor_principal' => ($proveedorId == $request->proveedor_principal)
+                ];
+            }
+            $producto->proveedores()->sync($proveedoresData);
+        }
 
         return redirect()->route('productos.index')
             ->with('success', 'Producto creado exitosamente.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Producto $producto): View
     {
         $categorias = Categoria::all();
-        return view('productos.edit', compact('producto', 'categorias'));
+        $proveedores = Proveedor::where('activo', true)->get(); // <- nuevo
+        return view('productos.edit', compact('producto', 'categorias', 'proveedores')); // <- nuevo
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Producto $producto): RedirectResponse
     {
         $request->validate([
@@ -83,32 +84,41 @@ class ProductoController extends Controller
             'codigo' => 'nullable|string|max:50|unique:productos,codigo,' . $producto->id,
             'imagen' => 'nullable|image|max:2048',
             'activo' => 'boolean',
+            'proveedores' => 'array|nullable',
+            'proveedor_principal' => 'nullable|integer'
         ]);
 
-        $data = $request->except('imagen');
+        $data = $request->except('imagen', 'proveedores', 'proveedor_principal');
 
         if ($request->hasFile('imagen')) {
-            // Eliminar imagen anterior si existe
             if ($producto->imagen) {
                 Storage::disk('public')->delete($producto->imagen);
             }
-
             $imagenPath = $request->file('imagen')->store('productos', 'public');
             $data['imagen'] = $imagenPath;
         }
 
         $producto->update($data);
 
+        // Actualizar proveedores
+        if ($request->has('proveedores')) {
+            $proveedoresData = [];
+            foreach ($request->proveedores as $proveedorId) {
+                $proveedoresData[$proveedorId] = [
+                    'es_proveedor_principal' => ($proveedorId == $request->proveedor_principal)
+                ];
+            }
+            $producto->proveedores()->sync($proveedoresData);
+        } else {
+            $producto->proveedores()->detach();
+        }
+
         return redirect()->route('productos.index')
             ->with('success', 'Producto actualizado exitosamente.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Producto $producto): RedirectResponse
     {
-        // Eliminar imagen si existe
         if ($producto->imagen) {
             Storage::disk('public')->delete($producto->imagen);
         }

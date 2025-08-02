@@ -79,4 +79,13 @@ class ProveedorController extends Controller
                 ->with('error', 'Error al eliminar el proveedor: ' . $e->getMessage());
         }
     }
+
+    // Método para mostrar los productos de un proveedor
+    public function productos(Proveedor $proveedor)
+    {
+        $productos = $proveedor->productos()->with('categoria')->paginate(10);
+
+
+        return view('proveedores.productos', compact('proveedor', 'productos'));
+    }
 }

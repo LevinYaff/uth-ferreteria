@@ -68,6 +68,23 @@
                                         <td class="py-4 px-6">
                                             <a href="{{ route('ventas.show', $venta->id) }}"
                                                 class="text-blue-600 hover:text-blue-900 mr-2">Ver Detalles</a>
+                                            <a href="{{ route('ventas.factura-pdf', $venta->id) }}"
+                                                class="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300"
+                                                target="_blank">
+                                                Factura
+                                            </a>
+                                            @if ($venta->estado === 'completada')
+                                                <form action="{{ route('ventas.cancelar', $venta->id) }}"
+                                                    method="POST" class="inline-block">
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                                                        onclick="return confirm('¿Está seguro de que desea cancelar esta venta? Esta acción devolverá los productos al inventario.')">
+                                                        Cancelar
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        </td>
                                         </td>
                                     </tr>
                                 @empty
