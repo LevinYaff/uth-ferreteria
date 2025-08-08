@@ -47,6 +47,13 @@
                             {{ __('Compras') }}
                         </x-nav-link>
                     @endif
+                    @if (in_array(auth()->user()->role, ['admin', 'vendedor']))
+                        <x-nav-link :href="route('clientes.index')" :active="request()->routeIs('clientes.*')">
+                            {{ __('Clientes') }}
+                        </x-nav-link>
+                    @endif
+
+
 
                 </div>
             </div>
@@ -209,6 +216,14 @@
                     {{ __('Compras') }}
                 </x-nav-link>
             @endif
+
+            @if (in_array(auth()->user()->role, ['admin', 'vendedor']))
+                <x-responsive-nav-link :href="route('clientes.index')" :active="request()->routeIs('clientes.*')">
+                    {{ __('Clientes') }}
+                </x-responsive-nav-link>
+            @endif
+
+
         </div>
 
         <!-- Responsive Theme Selector -->

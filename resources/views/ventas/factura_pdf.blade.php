@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>Factura de Venta #{{ $venta->id }}</title>
@@ -10,44 +11,53 @@
             color: #333;
             line-height: 1.5;
         }
+
         .container {
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
         }
+
         .header {
             text-align: center;
             margin-bottom: 30px;
         }
+
         .header h1 {
             font-size: 24px;
             margin-bottom: 5px;
         }
+
         .info-section {
             margin-bottom: 20px;
         }
+
         .info-section h2 {
             font-size: 16px;
             border-bottom: 1px solid #ddd;
             padding-bottom: 5px;
             margin-bottom: 10px;
         }
+
         .info-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
         }
+
         .info-item label {
             font-weight: bold;
             display: block;
             color: #666;
             margin-bottom: 3px;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
         }
+
         table th {
             background-color: #f5f5f5;
             padding: 8px;
@@ -55,17 +65,21 @@
             font-weight: bold;
             border-bottom: 1px solid #ddd;
         }
+
         table td {
             padding: 8px;
             border-bottom: 1px solid #ddd;
         }
+
         .total-section {
             margin-top: 20px;
             text-align: right;
         }
+
         .total-row {
             margin-bottom: 5px;
         }
+
         .total-row label {
             font-weight: bold;
             display: inline-block;
@@ -73,11 +87,13 @@
             text-align: right;
             margin-right: 10px;
         }
+
         .total-row.final {
             font-size: 16px;
             font-weight: bold;
             margin-top: 10px;
         }
+
         .footer {
             margin-top: 50px;
             text-align: center;
@@ -86,6 +102,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -103,7 +120,7 @@
 
                     <label>Estado:</label>
                     <div>
-                        @if($venta->estado === 'completada')
+                        @if ($venta->estado === 'completada')
                             Completada
                         @elseif($venta->estado === 'pendiente')
                             Pendiente
@@ -112,6 +129,50 @@
                         @endif
                     </div>
                 </div>
+
+                @if ($venta->cliente)
+                    <div class="info-section">
+                        <h2>Información del Cliente</h2>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <label>Nombre:</label>
+                                <div>{{ $venta->cliente->nombre_completo }}</div>
+
+                                @if ($venta->cliente->documento)
+                                    <label>Documento:</label>
+                                    <div>
+                                        {{ $venta->cliente->tipo_documento ? $venta->cliente->tipo_documento . ': ' : '' }}{{ $venta->cliente->documento }}
+                                    </div>
+                                @endif
+
+                                @if ($venta->cliente->telefono)
+                                    <label>Teléfono:</label>
+                                    <div>{{ $venta->cliente->telefono }}</div>
+                                @endif
+                            </div>
+
+                            <div class="info-item">
+                                @if ($venta->cliente->direccion)
+                                    <label>Dirección:</label>
+                                    <div>{{ $venta->cliente->direccion }}</div>
+                                @endif
+
+                                @if ($venta->cliente->ciudad || $venta->cliente->estado)
+                                    <label>Ciudad/Estado:</label>
+                                    <div>
+                                        {{ $venta->cliente->ciudad }}{{ $venta->cliente->estado ? ', ' . $venta->cliente->estado : '' }}
+                                    </div>
+                                @endif
+
+                                @if ($venta->entregado)
+                                    <label>Entregado:</label>
+                                    <div>{{ $venta->fecha_entrega ? $venta->fecha_entrega->format('d/m/Y') : 'Sí' }}
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                @endif
 
                 <div class="info-item">
                     <label>Vendedor:</label>
@@ -123,7 +184,7 @@
             </div>
         </div>
 
-        @if($venta->observaciones)
+        @if ($venta->observaciones)
             <div class="info-section">
                 <h2>Observaciones</h2>
                 <p>{{ $venta->observaciones }}</p>
@@ -142,7 +203,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($venta->detalles as $detalle)
+                    @foreach ($venta->detalles as $detalle)
                         <tr>
                             <td>{{ $detalle->producto->nombre }}</td>
                             <td>${{ number_format($detalle->precio_unitario, 2) }}</td>
@@ -168,4 +229,5 @@
         </div>
     </div>
 </body>
+
 </html>

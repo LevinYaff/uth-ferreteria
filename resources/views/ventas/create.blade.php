@@ -9,10 +9,10 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    @if($errors->any())
+                    @if ($errors->any())
                         <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
                             <ul>
-                                @foreach($errors->all() as $error)
+                                @foreach ($errors->all() as $error)
                                     <li>{{ $error }}</li>
                                 @endforeach
                             </ul>
@@ -21,6 +21,58 @@
 
                     <form method="POST" action="{{ route('ventas.store') }}" id="formVenta">
                         @csrf
+
+
+                        <div class="mb-6">
+                            <h3 class="text-lg font-medium mb-4">Información de la Venta</h3>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="cliente_id"
+                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Cliente</label>
+                                    <select name="cliente_id" id="cliente_id"
+                                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm">
+                                        <option value="">Sin cliente (venta anónima)</option>
+                                        @foreach ($clientes as $cliente)
+                                            <option value="{{ $cliente->id }}"
+                                                {{ old('cliente_id') == $cliente->id ? 'selected' : '' }}>
+                                                {{ $cliente->nombre_completo }}
+                                                {{ $cliente->documento ? '(' . $cliente->documento . ')' : '' }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <div class="mt-1 text-sm">
+                                        <a href="{{ route('clientes.create') }}"
+                                            class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
+                                            target="_blank">
+                                            + Crear nuevo cliente
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label for="metodo_pago"
+                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Método
+                                        de Pago</label>
+                                    <select name="metodo_pago" id="metodo_pago"
+                                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm">
+                                        <option value="Efectivo"
+                                            {{ old('metodo_pago') == 'Efectivo' ? 'selected' : '' }}>Efectivo</option>
+                                        <option value="Tarjeta de Crédito"
+                                            {{ old('metodo_pago') == 'Tarjeta de Crédito' ? 'selected' : '' }}>Tarjeta
+                                            de Crédito</option>
+                                        <option value="Tarjeta de Débito"
+                                            {{ old('metodo_pago') == 'Tarjeta de Débito' ? 'selected' : '' }}>Tarjeta
+                                            de Débito</option>
+                                        <option value="Transferencia Bancaria"
+                                            {{ old('metodo_pago') == 'Transferencia Bancaria' ? 'selected' : '' }}>
+                                            Transferencia Bancaria</option>
+                                        <option value="Otro" {{ old('metodo_pago') == 'Otro' ? 'selected' : '' }}>
+                                            Otro</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="mb-6">
                             <h3 class="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Productos</h3>
@@ -39,7 +91,8 @@
                                     <tbody id="detallesVenta">
                                         <!-- Aquí se agregarán dinámicamente las filas de productos -->
                                         <tr id="filaVacia">
-                                            <td colspan="5" class="py-4 px-6 text-center">Agregue productos a la venta</td>
+                                            <td colspan="5" class="py-4 px-6 text-center">Agregue productos a la
+                                                venta</td>
                                         </tr>
                                     </tbody>
                                     <tfoot>
@@ -53,28 +106,36 @@
                             </div>
 
                             <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
-                                <h4 class="text-md font-medium text-gray-700 dark:text-gray-300 mb-2">Agregar Producto</h4>
+                                <h4 class="text-md font-medium text-gray-700 dark:text-gray-300 mb-2">Agregar Producto
+                                </h4>
                                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                                     <div class="md:col-span-2">
-                                        <label for="producto_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Producto</label>
-                                        <select id="producto_id" class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm">
+                                        <label for="producto_id"
+                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Producto</label>
+                                        <select id="producto_id"
+                                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm">
                                             <option value="">Seleccione un producto</option>
-                                            @foreach($productos as $producto)
+                                            @foreach ($productos as $producto)
                                                 <option value="{{ $producto->id }}"
-                                                        data-precio="{{ $producto->precio_venta }}"
-                                                        data-stock="{{ $producto->stock }}"
-                                                        data-nombre="{{ $producto->nombre }}">
-                                                    {{ $producto->nombre }} - ${{ number_format($producto->precio_venta, 2) }} (Stock: {{ $producto->stock }})
+                                                    data-precio="{{ $producto->precio_venta }}"
+                                                    data-stock="{{ $producto->stock }}"
+                                                    data-nombre="{{ $producto->nombre }}">
+                                                    {{ $producto->nombre }} -
+                                                    ${{ number_format($producto->precio_venta, 2) }} (Stock:
+                                                    {{ $producto->stock }})
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div>
-                                        <label for="cantidad" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Cantidad</label>
-                                        <input type="number" id="cantidad" min="1" value="1" class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm">
+                                        <label for="cantidad"
+                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Cantidad</label>
+                                        <input type="number" id="cantidad" min="1" value="1"
+                                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm">
                                     </div>
                                     <div class="flex items-end">
-                                        <button type="button" id="btnAgregarProducto" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-500 active:bg-green-700 focus:outline-none focus:border-green-700 focus:ring ring-green-300 disabled:opacity-25 transition ease-in-out duration-150">
+                                        <button type="button" id="btnAgregarProducto"
+                                            class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-500 active:bg-green-700 focus:outline-none focus:border-green-700 focus:ring ring-green-300 disabled:opacity-25 transition ease-in-out duration-150">
                                             Agregar
                                         </button>
                                     </div>
@@ -83,13 +144,18 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="observaciones" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Observaciones</label>
-                            <textarea name="observaciones" id="observaciones" rows="2" class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm"></textarea>
+                            <label for="observaciones"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Observaciones</label>
+                            <textarea name="observaciones" id="observaciones" rows="2"
+                                class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm"></textarea>
                         </div>
 
                         <div class="flex items-center justify-between mt-4">
-                            <a href="{{ route('ventas.index') }}" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">Cancelar</a>
-                            <button type="submit" id="btnGuardarVenta" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500 active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150" disabled>
+                            <a href="{{ route('ventas.index') }}"
+                                class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">Cancelar</a>
+                            <button type="submit" id="btnGuardarVenta"
+                                class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500 active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150"
+                                disabled>
                                 Registrar Venta
                             </button>
                         </div>
@@ -151,7 +217,8 @@
                 const productoExistente = productos.find(p => p.id === productoId);
                 if (productoExistente) {
                     if (productoExistente.cantidad + cantidad > stock) {
-                        alert(`Stock insuficiente. Ya has agregado ${productoExistente.cantidad} unidades y solo hay ${stock} disponibles.`);
+                        alert(
+                            `Stock insuficiente. Ya has agregado ${productoExistente.cantidad} unidades y solo hay ${stock} disponibles.`);
                         return;
                     }
                     productoExistente.cantidad += cantidad;
@@ -160,7 +227,8 @@
                     // Actualizar la fila existente
                     const fila = document.getElementById(`producto-${productoId}`);
                     fila.querySelector('.cantidad').textContent = productoExistente.cantidad;
-                    fila.querySelector('.subtotal').textContent = '$' + productoExistente.subtotal.toFixed(2);
+                    fila.querySelector('.subtotal').textContent = '$' + productoExistente.subtotal.toFixed(
+                        2);
                 } else {
                     // Agregar nuevo producto
                     const subtotal = precio * cantidad;

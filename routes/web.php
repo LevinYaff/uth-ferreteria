@@ -9,6 +9,7 @@ use App\Http\Controllers\VentaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ThemeController;
 use App\Http\Controllers\CompraController;
+use App\Http\Controllers\ClienteController;
 use Illuminate\Support\Facades\Route;
 
 // rutas públicas
@@ -40,6 +41,14 @@ Route::middleware('auth')->group(function () {
         Route::resource('ventas', VentaController::class);
         Route::post('ventas/{venta}/cancelar', [VentaController::class, 'cancelar'])->name('ventas.cancelar');
         Route::get('ventas/{venta}/factura-pdf', [VentaController::class, 'facturaPdf'])->name('ventas.factura-pdf');
+
+        // clientes
+        Route::resource('clientes', ClienteController::class);
+        Route::get('clientes/{cliente}/historial', [ClienteController::class, 'historialCompras'])->name('clientes.historial');
+        Route::get('clientes/{cliente}/mapa', [ClienteController::class, 'mapa'])->name('clientes.mapa');
+
+        //entregas de ventas
+        route::post('ventas/{venta}/entregar', [VentaController::class, 'entregar'])->name('ventas.entregar');
     });
 
     // rutas para admin

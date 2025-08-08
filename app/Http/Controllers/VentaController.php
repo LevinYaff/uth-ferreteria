@@ -11,6 +11,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\Cliente;
 
 class VentaController extends Controller
 {
@@ -31,7 +32,10 @@ class VentaController extends Controller
         $productos = Producto::where('activo', true)
             ->where('stock', '>', 0)
             ->get();
-        return view('ventas.create', compact('productos'));
+        $clientes = Cliente::where('activo', true)
+            ->orderBy('nombre')
+            ->get();
+        return view('ventas.create', compact('productos', 'clientes'));
     }
 
     /**
@@ -43,6 +47,8 @@ class VentaController extends Controller
             'productos' => 'required|array|min:1',
             'productos.*.id' => 'required|exists:productos,id',
             'productos.*.cantidad' => 'required|integer|min:1',
+            'cliente_id' => 'nullable|exists:clientes,id',
+            'metodo_pago' => 'nullable|string|max:50',
             'observaciones' => 'nullable|string',
         ]);
 
@@ -81,6 +87,8 @@ class VentaController extends Controller
                 'user_id' => Auth::id(),
                 'total' => $total,
                 'estado' => 'completada',
+                'cliente_id' => $request->cliente_id,
+                'metodo_pago' => $request->metodo_pago,
                 'observaciones' => $request->observaciones,
             ]);
 
@@ -101,6 +109,30 @@ class VentaController extends Controller
         }
     }
 
+    /**
+     * Marcar una venta como entregada o no entregada.
+     */
+    public function entregar(Request $request, Venta $venta): RedirectResponse
+    {
+        $request->validate([
+            'entregado' => 'required|boolean',
+            'fecha_entrega' => 'nullable|date',
+        ]);
+
+        // Solo se pueden marcar ventas completadas
+        if ($venta->estado !== 'completada') {
+            return redirect()->route('ventas.show', $venta->id)
+                ->with('error', 'Solo se pueden marcar como entregadas las ventas completadas.');
+        }
+
+        $venta->entregado = $request->entregado;
+        $venta->fecha_entrega = $request->entregado ? ($request->fecha_entrega ?? now()) : null;
+        $venta->save();
+
+        $mensaje = $request->entregado ? 'Venta marcada como entregada.' : 'Venta marcada como no entregada.';
+        return redirect()->route('ventas.show', $venta->id)
+            ->with('success', $mensaje);
+    }
     /**
      * Display the specified resource.
      */

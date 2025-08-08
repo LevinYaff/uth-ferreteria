@@ -15,7 +15,16 @@ class Venta extends Model
         'user_id',
         'total',
         'estado',
-        'observaciones'
+        'observaciones',
+        'entregado',
+        'fecha_entrega',
+        'metodo_pago',
+        'cliente_id',
+
+    ];
+    protected $casts = [
+        'fecha_entrega' => 'datetime',
+        'entregado' => 'boolean',
     ];
 
     public function user(): BelongsTo
@@ -26,5 +35,10 @@ class Venta extends Model
     public function detalles(): HasMany
     {
         return $this->hasMany(DetalleVenta::class);
+    }
+
+    public function cliente(): BelongsTo
+    {
+        return $this->belongsTo(Cliente::class);
     }
 }
