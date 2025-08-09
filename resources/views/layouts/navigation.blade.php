@@ -10,47 +10,104 @@
                     </a>
                 </div>
 
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <!--Links de navegacion-->
+                <div class="hidden space-x-2 sm:-my-px sm:ml-6 sm:flex">
+                    <!-- Primero las opciones principales -->
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                            </path>
+                        </svg>
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
-                    @if (auth()->user()->role === 'admin')
-                        <x-nav-link :href="route('categorias.index')" :active="request()->routeIs('categorias.*')">
-                            {{ __('Categorías') }}
-                        </x-nav-link>
+                    @if (in_array(auth()->user()->role, ['admin', 'inventario', 'vendedor']))
+                        <!-- Grupo de Inventario -->
+                        @if (in_array(auth()->user()->role, ['admin', 'inventario']))
+                            <x-nav-link :href="route('productos.index')" :active="request()->routeIs('productos.*')">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                </svg>
+                                {{ __('Productos') }}
+                            </x-nav-link>
+                        @endif
+
+                        @if (auth()->user()->role === 'admin')
+                            <x-nav-link :href="route('categorias.index')" :active="request()->routeIs('categorias.*')"><svg class=" w-5 h-5" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7
+                                    7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828
+                                    0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                                </svg>
+                                {{ __('Categorías') }}
+                            </x-nav-link>
+                        @endif
                     @endif
 
-                    @if (in_array(auth()->user()->role, ['admin', 'vendedor']))
-                        <x-nav-link :href="route('productos.index')" :active="request()->routeIs('productos.*')">
-                            {{ __('Productos') }}
-                        </x-nav-link>
+                    @if (in_array(auth()->user()->role, ['admin', 'compras']))
+                        <!-- Grupo de Compras -->
+                        <x-nav-separator />
 
-                        <x-nav-link :href="route('ventas.index')" :active="request()->routeIs('ventas.*')">
-                            {{ __('Ventas') }}
-                        </x-nav-link>
-                    @endif
-
-                    @if (auth()->user()->role === 'admin')
-                        <x-nav-link :href="route('proveedores.index')" :active="request()->routeIs('proveedores.*')">
+                        <x-nav-link :href="route('proveedores.index')" :active="request()->routeIs('proveedores.*')"><svg class="w-5 h-5" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2
+                                0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5
+                                10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                            </svg>
                             {{ __('Proveedores') }}
                         </x-nav-link>
-                    @endif
-                    @if (auth()->user()->role === 'admin')
-                        <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
-                            {{ __('Usuarios') }}
-                        </x-nav-link>
-                    @endif
-                    @if (in_array(auth()->user()->role, ['admin']))
-                        <x-nav-link :href="route('compras.index')" :active="request()->routeIs('compras.*')">
+
+                        <x-nav-link :href="route('compras.index')" :active="request()->routeIs('compras.*')"><svg class="w-5 h-5" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4
+                                0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
                             {{ __('Compras') }}
                         </x-nav-link>
                     @endif
+
                     @if (in_array(auth()->user()->role, ['admin', 'vendedor']))
-                        <x-nav-link :href="route('clientes.index')" :active="request()->routeIs('clientes.*')">
+                        <!-- Grupo de Ventas -->
+                        <x-nav-separator />
+
+                        <x-nav-link :href="route('ventas.index')" :active="request()->routeIs('ventas.*')"><svg class="w-5 h-5" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4
+                                2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0
+                                100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                            {{ __('Ventas') }}
+                        </x-nav-link>
+
+                        <x-nav-link :href="route('clientes.index')" :active="request()->routeIs('clientes.*')"><svg class="w-5 h-5" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0
+                                11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                             {{ __('Clientes') }}
                         </x-nav-link>
+
+                    @endif
+
+                    @if (auth()->user()->role === 'admin')
+                        <!-- Administración -->
+                        <x-nav-separator />
+
+                        <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')"><svg class="w-5 h-5" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4
+                                0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            {{ __('Usuarios') }}
+                                </x-nav-link>
+
+                        @if (in_array(auth()->user()->role, ['admin', 'supervisor']))
+                            <x-nav-link :href="route('reportes.index')" :active="request()->routeIs('reportes.*')"><svg class="w-5 h-5" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 2v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                {{ __('Reportes') }}
+                            </x-nav-link>
+                        @endif
                     @endif
 
 
@@ -179,46 +236,61 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')"
+                icon='<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>'>
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
 
             @if (auth()->user()->role === 'admin')
-                <x-responsive-nav-link :href="route('categorias.index')" :active="request()->routeIs('categorias.*')">
+                <x-responsive-nav-link :href="route('categorias.index')" :active="request()->routeIs('categorias.*')"
+                    icon='<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>'>
                     {{ __('Categorías') }}
                 </x-responsive-nav-link>
             @endif
 
             @if (in_array(auth()->user()->role, ['admin', 'vendedor']))
-                <x-responsive-nav-link :href="route('productos.index')" :active="request()->routeIs('productos.*')">
+                <x-responsive-nav-link :href="route('productos.index')" :active="request()->routeIs('productos.*')"
+                    icon='<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>'>
                     {{ __('Productos') }}
                 </x-responsive-nav-link>
 
-                <x-responsive-nav-link :href="route('ventas.index')" :active="request()->routeIs('ventas.*')">
+                <x-responsive-nav-link :href="route('ventas.index')" :active="request()->routeIs('ventas.*')"
+                    icon='<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>'>
                     {{ __('Ventas') }}
                 </x-responsive-nav-link>
             @endif
 
             @if (auth()->user()->role === 'admin')
-                <x-responsive-nav-link :href="route('proveedores.index')" :active="request()->routeIs('proveedores.*')">
+                <x-responsive-nav-link :href="route('proveedores.index')" :active="request()->routeIs('proveedores.*')"
+                    icon='<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>'>
                     {{ __('Proveedores') }}
                 </x-responsive-nav-link>
             @endif
 
             @if (auth()->user()->role === 'admin')
-                <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
+                <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')"
+                    icon='<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2m-8-6a8.003 8.003 0 00-7.938-8A8.003 8.003 0 0016.938 15H12z"></path></svg>'>
                     {{ __('Usuarios') }}
                 </x-responsive-nav-link>
             @endif
 
             @if (in_array(auth()->user()->role, ['admin']))
-                <x-nav-link :href="route('compras.index')" :active="request()->routeIs('compras.*')">
-                    {{ __('Compras') }}
-                </x-nav-link>
+                @if (in_array(auth()->user()->role, ['admin']))
+                    <x-responsive-nav-link :href="route('compras.index')" :active="request()->routeIs('compras.*')">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+                            </path>
+                        </svg>
+                        {{ __('Compras') }}
+                    </x-responsive-nav-link>
+                @endif
             @endif
 
             @if (in_array(auth()->user()->role, ['admin', 'vendedor']))
-                <x-responsive-nav-link :href="route('clientes.index')" :active="request()->routeIs('clientes.*')">
+                <x-responsive-nav-link :href="route('clientes.index')" :active="request()->routeIs('clientes.*')"
+                    icon='<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2m-8-6a8.003 8.003 0 00-7.938-8A8.003 8.003 0 0016.938 15H12z"></path></svg>'>
                     {{ __('Clientes') }}
                 </x-responsive-nav-link>
             @endif

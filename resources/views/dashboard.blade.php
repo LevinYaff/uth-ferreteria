@@ -197,7 +197,7 @@
                                 </a>
                             @endif
 
-                            @if (auth()->user()->role === 'Admin')
+                            @if (auth()->user()->role === 'admin')
                                 <a href="{{ route('users.index') }}"
                                     class="block p-4 bg-indigo-100 hover:bg-indigo-200 dark:bg-indigo-900 dark:hover:bg-indigo-800 rounded-lg transition duration-300">
                                     <h4 class="text-md font-semibold mb-1">Gestionar Usuarios</h4>

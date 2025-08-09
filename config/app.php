@@ -94,9 +94,6 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         //App\Providers\EventServiceProvider::class,
         //App\Providers\RouteServiceProvider::class,
-
-        // Añadimos tu nuevo Service Provider
-        App\Providers\RoleServiceProvider::class,
     ])->toArray(),
 
 ];

@@ -10,13 +10,19 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ThemeController;
 use App\Http\Controllers\CompraController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\ReporteController;
+use App\Http\Controllers\MovimientoInventarioController;
+use App\Http\Controllers\AutorizacionCompraController;
 use Illuminate\Support\Facades\Route;
 
-// rutas públicas
+// Rutas públicas
 Route::get('/', function () {
-    return redirect()->route('login');
-    Route::post('/theme', [ThemeController::class, 'update'])->name('theme.update');
-});
+    return view('welcome'); // Mostrar directamente la página de bienvenida
+})->name('welcome');
+
+// Ruta para el tema (puede ser accesible sin autenticación)
+Route::post('/theme', [ThemeController::class, 'update'])->name('theme.update');
+
 
 // rutas autenticadas
 Route::middleware('auth')->group(function () {
@@ -32,48 +38,69 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])
         ->name('profile.destroy');
 
-    // rutas para vendedores y admin
-    Route::middleware(['role:admin,vendedor'])->group(function () {
-        // productos
-        Route::resource('productos', ProductoController::class);
-
+    // Rutas para vendedores y supervisores
+    Route::middleware(['role:admin,vendedor,supervisor'])->group(function () {
         // ventas
         Route::resource('ventas', VentaController::class);
         Route::post('ventas/{venta}/cancelar', [VentaController::class, 'cancelar'])->name('ventas.cancelar');
         Route::get('ventas/{venta}/factura-pdf', [VentaController::class, 'facturaPdf'])->name('ventas.factura-pdf');
+        Route::post('ventas/{venta}/entregar', [VentaController::class, 'entregar'])->name('ventas.entregar');
 
         // clientes
         Route::resource('clientes', ClienteController::class);
         Route::get('clientes/{cliente}/historial', [ClienteController::class, 'historialCompras'])->name('clientes.historial');
         Route::get('clientes/{cliente}/mapa', [ClienteController::class, 'mapa'])->name('clientes.mapa');
-
-        //entregas de ventas
-        route::post('ventas/{venta}/entregar', [VentaController::class, 'entregar'])->name('ventas.entregar');
     });
 
-    // rutas para admin
-    Route::middleware(['role:admin'])->group(function () {
-        // categorías
-        Route::resource('categorias', CategoriaController::class);
+    // Rutas para encargados de inventario
+    Route::middleware(['role:admin,inventario'])->group(function () {
+        // productos
+        Route::resource('productos', ProductoController::class);
+        Route::get('productos/categoria/{categoria}', [ProductoController::class, 'porCategoria'])->name('productos.categoria');
+        Route::get('productos/reporte', [ProductoController::class, 'reporte'])->name('productos.reporte');
+        Route::post('productos/ajustar-stock', [ProductoController::class, 'ajustarStock'])->name('productos.ajustar-stock');
 
+        // movimientos de inventario
+        Route::get('movimientos', [MovimientoInventarioController::class, 'index'])->name('movimientos.index');
+    });
+
+    // Rutas para encargados de compras y supervisores
+    Route::middleware(['role:admin,compras,supervisor'])->group(function () {
         // proveedores
         Route::resource('proveedores', ProveedorController::class)->parameters([
             'proveedores' => 'proveedor'
         ]);
+        Route::get('proveedores/{proveedor}/productos', [ProveedorController::class, 'productos'])->name('proveedores.productos');
 
-        // crear nuevos usuarios
-        Route::resource('users', UserController::class);
-        Route::post('/theme', [ThemeController::class, 'update'])->name('theme.update');
-
-        // Compras
+        // compras
         Route::resource('compras', CompraController::class);
         Route::post('compras/{compra}/recibir', [CompraController::class, 'recibir'])->name('compras.recibir');
         Route::post('compras/{compra}/cancelar', [CompraController::class, 'cancelar'])->name('compras.cancelar');
         Route::get('compras/{compra}/factura-pdf', [CompraController::class, 'facturaPdf'])->name('compras.factura-pdf');
         Route::get('proveedores/{proveedor}/compras', [CompraController::class, 'historialProveedor'])->name('proveedores.compras');
+    });
 
-        // Productos por proveedor
-        Route::get('proveedores/{proveedor}/productos', [ProveedorController::class, 'productos'])->name('proveedores.productos');
+    // Reportes (accesible para admin y supervisor)
+    Route::middleware(['role:admin,supervisor'])->group(function () {
+        Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes.index');
+        Route::get('/reportes/ventas', [ReporteController::class, 'ventas'])->name('reportes.ventas');
+        Route::get('/reportes/inventario', [ReporteController::class, 'inventario'])->name('reportes.inventario');
+        Route::get('/reportes/compras', [ReporteController::class, 'compras'])->name('reportes.compras');
+        Route::get('/reportes/actividad', [ReporteController::class, 'actividad'])->name('reportes.actividad');
+
+        // Autorización de compras
+        //Route::post('/compras/{compra}/autorizar', [AutorizacionCompraController::class, 'autorizar'])->name('compras.autorizar');
+        //Route::post('/compras/{compra}/rechazar', [AutorizacionCompraController::class, 'rechazar'])->name('compras.rechazar');
+    });
+
+    // Rutas para admin e inventario
+    Route::middleware(['role:admin,inventario'])->group(function () {
+        // categorías
+        Route::resource('categorias', CategoriaController::class);
+
+        // gestión de usuarios
+        Route::resource('users', UserController::class);
+        Route::post('/theme', [ThemeController::class, 'update'])->name('theme.update');
     });
 });
 

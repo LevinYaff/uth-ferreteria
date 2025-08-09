@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Auth;
 
 
 class UserController extends Controller
@@ -39,7 +40,7 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'role' => ['required', 'in:admin,vendedor,cliente'],
+            'role' => ['required', 'in:admin,vendedor,inventario,compras,supervisor,cliente'],
         ]);
 
         $user = User::create([
@@ -79,7 +80,7 @@ class UserController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
-            'role' => ['required', 'in:admin,vendedor,cliente'],
+            'role' => ['required', 'in:admin,vendedor,inventario,compras,supervisor,cliente'],
         ]);
 
         $data = $request->only(['name', 'email', 'role']);
@@ -104,7 +105,7 @@ class UserController extends Controller
     public function destroy(User $user): RedirectResponse
     {
         // Evitar que el usuario se elimine a sí mismo
-        if ($user->id === auth()->user()?->id) {
+        if ($user->id === Auth::user()?->id) {
             return redirect()->route('users.index')
                 ->with('error', 'No puedes eliminar tu propio usuario.');
         }

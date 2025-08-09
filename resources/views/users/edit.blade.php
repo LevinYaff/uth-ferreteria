@@ -49,6 +49,9 @@
                                 <option value="">Seleccione un rol</option>
                                 <option value="admin" {{ old('role', $user->role) === 'admin' ? 'selected' : '' }}>Administrador</option>
                                 <option value="vendedor" {{ old('role', $user->role) === 'vendedor' ? 'selected' : '' }}>Vendedor</option>
+                                <option value="inventario" {{ old('role', $user->role) === 'inventario' ? 'selected' : '' }}>Encargado de Inventario</option>
+                                <option value="compras" {{ old('role', $user->role) === 'compras' ? 'selected' : '' }}>Encargado de Compras</option>
+                                <option value="supervisor" {{ old('role', $user->role) === 'supervisor' ? 'selected' : '' }}>Supervisor</option>
                                 <option value="cliente" {{ old('role', $user->role) === 'cliente' ? 'selected' : '' }}>Cliente</option>
                             </select>
                             @error('role')

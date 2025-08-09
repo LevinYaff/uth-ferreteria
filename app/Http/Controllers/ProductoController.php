@@ -18,6 +18,15 @@ class ProductoController extends Controller
         return view('productos.index', compact('productos'));
     }
 
+    public function porCategoria(Categoria $categoria)
+{
+    $productos = Producto::where('categoria_id', $categoria->id)
+                        ->orderBy('nombre')
+                        ->get();
+
+    return view('productos.index', compact('productos', 'categoria'));
+}
+
     public function create(): View
     {
         $categorias = Categoria::all();
@@ -115,6 +124,48 @@ class ProductoController extends Controller
 
         return redirect()->route('productos.index')
             ->with('success', 'Producto actualizado exitosamente.');
+    }
+
+    public function reporte(): View
+    {
+        $productos = Producto::with(['categoria', 'proveedores'])
+            ->withCount(['detalleVentas as total_vendido' => function($query) {
+                $query->whereHas('venta', function($q) {
+                    $q->where('estado', 'completada');
+                });
+            }])
+            ->get();
+
+        return view('productos.reporte', compact('productos'));
+    }
+
+    public function ajustarStock(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'producto_id' => 'required|exists:productos,id',
+            'cantidad' => 'required|integer',
+            'tipo_ajuste' => 'required|in:sumar,restar',
+            'motivo' => 'required|string|max:255'
+        ]);
+
+        $producto = Producto::findOrFail($request->producto_id);
+
+        if ($request->tipo_ajuste === 'sumar') {
+            $producto->stock += $request->cantidad;
+        } else {
+            if ($producto->stock < $request->cantidad) {
+                return redirect()->back()
+                    ->withErrors(['error' => 'No hay suficiente stock para realizar el ajuste.']);
+            }
+            $producto->stock -= $request->cantidad;
+        }
+
+        $producto->save();
+
+        // Aquí podrías registrar el ajuste en una tabla de movimientos si lo deseas
+
+        return redirect()->back()
+            ->with('success', 'Stock ajustado correctamente.');
     }
 
     public function destroy(Producto $producto): RedirectResponse

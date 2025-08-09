@@ -45,22 +45,37 @@
                                         <td class="py-4 px-6">{{ $user->name }}</td>
                                         <td class="py-4 px-6">{{ $user->email }}</td>
                                         <td class="py-4 px-6">
-                                            @if ($user->role === 'admin')
-                                                <span
-                                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
-                                                    Administrador
-                                                </span>
-                                            @elseif($user->role === 'vendedor')
-                                                <span
-                                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                                                    Vendedor
-                                                </span>
-                                            @else
-                                                <span
-                                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                    Cliente
-                                                </span>
-                                            @endif
+                                            @switch($user->role)
+                                                @case('admin')
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                                                        Administrador
+                                                    </span>
+                                                    @break
+                                                @case('vendedor')
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                        Vendedor
+                                                    </span>
+                                                    @break
+                                                @case('inventario')
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                                        Encargado de Inventario
+                                                    </span>
+                                                    @break
+                                                @case('compras')
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-pink-100 text-pink-800">
+                                                        Encargado de Compras
+                                                    </span>
+                                                    @break
+                                                @case('supervisor')
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-indigo-100 text-indigo-800">
+                                                        Supervisor
+                                                    </span>
+                                                    @break
+                                                @default
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                        Cliente
+                                                    </span>
+                                            @endswitch
                                         </td>
                                         <td class="py-4 px-6">{{ $user->created_at->format('d/m/Y') }}</td>
                                         <td class="py-4 px-6 flex">

@@ -6,6 +6,7 @@ use App\Models\Categoria;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use App\Models\Producto;
 
 class CategoriaController extends Controller
 {
@@ -75,11 +76,25 @@ class CategoriaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Categoria $categoria): RedirectResponse
+    public function destroy(Categoria $categoria)
     {
-        $categoria->delete();
+     // Verificar si hay productos asociados a esta categoría
+    $productosAsociados = Producto::where('categoria_id', $categoria->id)->exists();
 
+    if ($productosAsociados) {
+        // Si hay productos asociados, redirigir con mensaje de error
         return redirect()->route('categorias.index')
-            ->with('success', 'Categoría eliminada exitosamente.');
+            ->with('error', 'No se puede eliminar la categoría porque tiene productos asociados. Debe reasignar o eliminar estos productos primero.');
     }
+
+    // Si no hay productos asociados, proceder con la eliminación
+    try {
+        $categoria->delete();
+        return redirect()->route('categorias.index')
+            ->with('success', 'Categoría eliminada correctamente.');
+    } catch (\Exception $e) {
+        return redirect()->route('categorias.index')
+            ->with('error', 'Ha ocurrido un error al intentar eliminar la categoría: ' . $e->getMessage());
+    }
+}
 }

@@ -55,4 +55,22 @@ class Producto extends Model
                     ->wherePivot('es_proveedor_principal', true)
                     ->first();
     }
+
+    // Obtener el último proveedor que vendió este producto
+    public function ultimo_proveedor()
+    {
+        return $this->belongsTo(Proveedor::class, 'ultimo_proveedor_id');
+    }
+
+    // Obtener el último precio de compra
+    public function getUltimoPrecioCompraAttribute()
+    {
+        $ultimaCompra = $this->detalleCompras()
+            ->join('compras', 'detalle_compras.compra_id', '=', 'compras.id')
+            ->where('compras.estado', 'recibida')
+            ->orderBy('compras.created_at', 'desc')
+            ->first();
+
+        return $ultimaCompra ? $ultimaCompra->precio_unitario : null;
+    }
 }

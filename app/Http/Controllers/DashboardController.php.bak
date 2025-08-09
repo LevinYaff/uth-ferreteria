@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Venta;
+use App\Models\Producto;
+use App\Models\Proveedor;
+use App\Models\Categoria;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Support\Facades\DB;
+
+class DashboardController extends Controller
+{
+    public function index(): View
+    {
+        $user = auth()->user();
+
+        // Datos comunes
+        $totalProductos = Producto::count();
+        $productosAgotados = Producto::where('stock', 0)->count();
+        $productosBajoStock = Producto::where('stock', '<=', 5)
+            ->where('stock', '>', 0)
+            ->orderBy('stock', 'asc')
+            ->with('categoria')
+            ->get();
+        $totalProveedores = Proveedor::count();
+
+        // Renderizar vista según el rol del usuario
+        if ($user->role === 'vendedor') {
+            return $this->vendedorDashboard($user);
+        } elseif ($user->role === 'inventario') {
+            return $this->inventarioDashboard($totalProductos, $productosAgotados, $productosBajoStock, $totalProveedores);
+        } elseif ($user->role === 'compras') {
+            return $this->comprasDashboard($totalProveedores, $productosAgotados, $productosBajoStock);
+        } elseif ($user->role === 'supervisor') {
+            return $this->supervisorDashboard($productosBajoStock);
+        }
+
+        // Dashboard del administrador (default)
+        return $this->adminDashboard($totalProductos, $productosAgotados, $productosBajoStock, $totalProveedores);
+    }
+}

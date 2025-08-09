@@ -10,7 +10,6 @@
             </a>
         </div>
     </x-slot>
-
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -23,6 +22,11 @@
                             </div>
                         @endif
 
+                        @if (session('error'))
+                            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
+                                {{ session('error') }}
+                            </div>
+                        @endif
                         <table class="min-w-full bg-white dark:bg-gray-800 border dark:border-gray-700">
                             <thead>
                                 <tr class="bg-gray-100 dark:bg-gray-700">
